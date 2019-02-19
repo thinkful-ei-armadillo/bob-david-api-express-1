@@ -24,7 +24,48 @@ app.get('/cipher', (req,res) => {
   res.send(results);
 })
 
+app.get('/lotto', (req,res) => {
 
+  const arr = req.query.arr;
+  let results = 0;
+  const lotto = (() => {
+    let lottoArray =[];
+    for (let i=0;i<6;i++) {
+      lottoArray.push(Math.ceil(Math.random()*20))
+    }
+    return lottoArray; 
+  })();
+  
+  arr.forEach((num) => {
+    
+    const index = lotto.findIndex(lottoNum => lottoNum === parseInt(num));
+    
+    if (index !== -1) {
+      
+      lotto.splice(index, 1, 'words');
+      results ++;
+      
+    } 
+  })
+
+  let resultsString = '';
+
+  switch(results){
+    case 4:
+    resultsString = 'Congratulation you win a free ticket!'
+    break;
+    case 5:
+      resultsString = 'Congratulations! You win $100!'
+      break;
+    case 6:
+      resultsString = 'Wow! Unbelievable! You could have won the mega millions!'
+      break;
+    default:
+      resultsString = 'Sorry, you lose'
+      break;
+  }
+  res.send(resultsString);
+})
 
 app.listen(8000, () => {
   console.log('Express server is listening on server 8000')
